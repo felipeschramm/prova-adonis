@@ -8,16 +8,23 @@ class BetSchema extends Schema {
     this.create('bets', (table) => {
       table.increments()
       table
+        .integer('game_id')
+        .unsigned()
+        .references('id')
+        .inTable('games')
+        .onUpdate('CASCADE')
+        .onDelete('SET NULL')
+      table
         .integer('user_id')
         .unsigned()
         .references('id')
         .inTable('users')
         .onUpdate('CASCADE')
         .onDelete('SET NULL')
-      table.string('numbers').notNullable()
-      table.string('date').notNullable()
-      table.string('price').notNullable()
-      table.string('type').notNullable()
+      table.string('numbers', 200).notNullable()
+      table.string('date', 20).notNullable()
+      table.string('type', 20).notNullable()
+      table.integer('game_id').unsigned().references('id').inTable('games')
       table.timestamps()
     })
   }

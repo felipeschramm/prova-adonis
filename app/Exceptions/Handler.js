@@ -1,24 +1,18 @@
 'use strict'
 
 const BaseExceptionHandler = use('BaseExceptionHandler')
-const Env = use('Env')
-const Youch = use('Youch')
-// const Raven = use('Raven')
-// const Config = use('Config')
 
 class ExceptionHandler extends BaseExceptionHandler {
-  async handle(error, { request, response }) {
+  async handle(error, { response }) {
     if (error.name === 'ValidationException') {
-      return response.status(error.status).send(error.messages)
+      return response
+        .status(error.status)
+        .send({ error: { messages: error.messages } })
     }
 
-    if (Env.get('NODE_ENV') === 'development') {
-      const youch = new Youch(error, request.request)
-      const errorJSON = await youch.toJSON()
-      return response.status(error.status).send(errorJSON)
-    }
-
-    return response.status(error.status)
+    return response
+      .status(error.status)
+      .send({ error: { message: error.message } })
   }
 
   async report(error, { request }) {
