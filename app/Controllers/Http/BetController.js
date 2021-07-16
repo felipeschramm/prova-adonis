@@ -6,24 +6,31 @@ const Game = use('App/Models/Game')
 class BetController {
   async index({ auth }) {
     try {
-      const bets = await Bet.query()
-        .with('user')
-        .where('user_id', auth.user.id)
-        .fetch()
-      return bets;
+      const bets = await Bet.query().where('user_id', auth.user.id).fetch()
+      return bets
     } catch (error) {
       console.log(error)
     }
   }
 
   async store({ request, auth }) {
-    const data = request.only(['numbers', 'date', 'type'])
-    const typeReturned = await Game.findByOrFail('type', data.type)
+    const data = request.only([
+      'numbers',
+      'date',
+      'type',
+      'index',
+      'color',
+      'price',
+      'max-number'
+    ])
+    // console.log(JSON.stringify(data))
+    // const typeReturned = await Game.findByOrFail('type', data.type)
     const bet = await Bet.create({
-      game_id: typeReturned.id,
       user_id: auth.user.id,
       ...data
     })
+
+    // const bet = await Bet.createMany(data)
 
     // await Mail.send(
     //   'newbet.edge',

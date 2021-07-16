@@ -9,7 +9,7 @@ class Bet extends Model {
     }
 
     game(){
-        return this.hasOne('App/Models/Game')
+        return this.belongsTo('App/Models/Game')
     }
 }
 

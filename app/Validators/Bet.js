@@ -6,8 +6,8 @@ class Bet {
   }
   get rules() {
     return {
-      numbers: 'required|string',
-      date: 'required|string'
+      // numbers: 'required|string',
+      // date: 'required|string'
     }
   }
 }

@@ -5,6 +5,10 @@ const Database = use('Database')
 const Mail = use('Mail')
 
 class UserController {
+  async index({auth}){
+    const data = auth.user;
+    return data;
+  }
   async store({ request }) {
     const data = request.only(['username', 'email', 'password'])
     const trx = await Database.beginTransaction()
@@ -22,6 +26,15 @@ class UserController {
     } catch (err) {
         return {err}
     }
+  }
+
+  async update({request,auth}){
+    const user = await User.findByOrFail('email',auth.user.email);
+    const data = request.only(['username', 'email', 'password'])
+    user.email = data.email;
+    user.username = data.username;
+    await user.save()
+    return user;
   }
 }
 
