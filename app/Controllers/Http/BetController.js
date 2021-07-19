@@ -2,6 +2,7 @@
 
 const Bet = use('App/Models/Bet')
 const Game = use('App/Models/Game')
+const Mail = use('Mail')
 
 class BetController {
   async index({ auth }) {
@@ -23,28 +24,26 @@ class BetController {
       'price',
       'max-number'
     ])
-    // console.log(JSON.stringify(data))
-    // const typeReturned = await Game.findByOrFail('type', data.type)
     const bet = await Bet.create({
       user_id: auth.user.id,
       ...data
     })
 
-    // const bet = await Bet.createMany(data)
-
-    // await Mail.send(
-    //   'newbet.edge',
-    //   {
-    //     email:auth.user.email,
-    //   },
-    //   (message) => {
-    //     message.from('felipecschramm@hotmail.com')
-    //     message.to(auth.user.email)
-    //     message.subject('Novas Apostas')
-    //   }
-    // )
-
     return bet
+  }
+
+  async send({auth}) {
+    await Mail.send(
+      'newbet.edge',
+      {
+        email: auth.user.email
+      },
+      (message) => {
+        message.from('felipecschramm@hotmail.com')
+        message.to(auth.user.email)
+        message.subject('Novas Apostas')
+      }
+    )
   }
 }
 

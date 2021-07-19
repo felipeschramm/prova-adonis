@@ -29,10 +29,10 @@ class UserController {
   }
 
   async update({request,auth}){
-    const user = await User.findByOrFail('email',auth.user.email);
-    const data = request.only(['username', 'email', 'password'])
-    user.email = data.email;
-    user.username = data.username;
+    const {email, username} = request.all()
+    const user = await User.findByOrFail('email',email);
+    user.email = email;
+    user.username = username;
     await user.save()
     return user;
   }
